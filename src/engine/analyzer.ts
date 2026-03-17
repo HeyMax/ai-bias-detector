@@ -9,11 +9,22 @@ import type {
 } from '../types/index.js';
 import { extractEntities } from './entity-extractor.js';
 import { RHETORIC_PATTERNS } from './rhetoric-patterns.js';
-import { findConflicts } from './conflict-db.js';
+import { findConflicts, findConflictsFromList } from './conflict-db.js';
+import type { ConflictEntry } from '../types/index.js';
 
 let signalCounter = 0;
 function nextId(): string {
   return `sig_${Date.now()}_${++signalCounter}`;
+}
+
+let _remoteConflicts: ConflictEntry[] | null = null;
+
+/**
+ * Inject remote conflict data (called by content script after
+ * fetching updates).  Falls back to built-in DB if never called.
+ */
+export function setRemoteConflicts(entries: ConflictEntry[]): void {
+  _remoteConflicts = entries;
 }
 
 export function analyze(
@@ -111,7 +122,9 @@ function detectConflictsOfInterest(
   signals: BiasSignal[],
 ): void {
   const entityNames = entities.map(e => e.name);
-  const conflicts = findConflicts(platform, entityNames);
+  const conflicts = _remoteConflicts
+    ? findConflictsFromList(_remoteConflicts, platform, entityNames)
+    : findConflicts(platform, entityNames);
 
   for (const conflict of conflicts) {
     const relationLabel: Record<string, Record<Locale, string>> = {

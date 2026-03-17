@@ -1,24 +1,24 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
+const entries = [
+  { name: 'content', input: 'src/content/content.ts', out: 'content/content.js' },
+  { name: 'service-worker', input: 'src/background/service-worker.ts', out: 'background/service-worker.js' },
+  { name: 'popup', input: 'src/popup/popup.ts', out: 'popup/popup.js' },
+];
+
+const target = process.env.BUILD_ENTRY ?? 'content';
+const entry = entries.find(e => e.name === target) ?? entries[0];
+
 export default defineConfig({
   build: {
     outDir: 'dist',
-    emptyOutDir: true,
+    emptyOutDir: false,
     rollupOptions: {
-      input: {
-        content: resolve(__dirname, 'src/content/content.ts'),
-        'service-worker': resolve(__dirname, 'src/background/service-worker.ts'),
-        popup: resolve(__dirname, 'src/popup/popup.ts'),
-      },
+      input: resolve(__dirname, entry.input),
       output: {
-        entryFileNames: (chunk) => {
-          if (chunk.name === 'content') return 'content/content.js';
-          if (chunk.name === 'service-worker') return 'background/service-worker.js';
-          if (chunk.name === 'popup') return 'popup/popup.js';
-          return '[name].js';
-        },
-        format: 'es',
+        entryFileNames: entry.out,
+        format: 'iife',
       },
     },
     target: 'esnext',

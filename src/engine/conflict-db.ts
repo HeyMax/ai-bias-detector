@@ -207,6 +207,18 @@ export function findConflicts(
   platform: string,
   entityNames: string[],
 ): ConflictEntry[] {
+  return findConflictsFromList(CONFLICT_DATABASE, platform, entityNames);
+}
+
+/**
+ * Same logic but accepts an arbitrary conflict list — used by the
+ * analyzer when remote data is available.
+ */
+export function findConflictsFromList(
+  db: ConflictEntry[],
+  platform: string,
+  entityNames: string[],
+): ConflictEntry[] {
   const lowerPlatform = platform.toLowerCase();
   const vendors = Object.entries(vendorPlatformMap)
     .filter(([, platforms]) => platforms.some(p => lowerPlatform.includes(p)))
@@ -216,7 +228,7 @@ export function findConflicts(
 
   const lowerEntities = entityNames.map(n => n.toLowerCase());
 
-  return CONFLICT_DATABASE.filter(
+  return db.filter(
     entry =>
       vendors.includes(entry.vendor) &&
       lowerEntities.some(e => e.includes(entry.brand) || entry.brand.includes(e)),

@@ -1,0 +1,218 @@
+[
+  {
+    "vendor": "openai",
+    "brand": "microsoft",
+    "relationship": "investor",
+    "source": "https://openai.com/blog/openai-and-microsoft-extend-partnership"
+  },
+  {
+    "vendor": "openai",
+    "brand": "microsoft 365",
+    "relationship": "investor_product",
+    "source": "https://openai.com/blog/openai-and-microsoft-extend-partnership"
+  },
+  {
+    "vendor": "openai",
+    "brand": "azure",
+    "relationship": "exclusive_cloud",
+    "source": "https://openai.com/blog/openai-and-microsoft-extend-partnership"
+  },
+  {
+    "vendor": "openai",
+    "brand": "bing",
+    "relationship": "integration",
+    "source": "https://blogs.microsoft.com/blog/2023/02/07/reinventing-search-with-a-new-ai-powered-microsoft-bing-and-edge/"
+  },
+  {
+    "vendor": "openai",
+    "brand": "github copilot",
+    "relationship": "technology_provider",
+    "source": "https://github.blog/2023-03-22-github-copilot-x-the-ai-powered-developer-experience/"
+  },
+  {
+    "vendor": "openai",
+    "brand": "notion",
+    "relationship": "partner",
+    "source": "https://www.notion.so/product/ai"
+  },
+  {
+    "vendor": "openai",
+    "brand": "shopify",
+    "relationship": "partner",
+    "source": "https://www.shopify.com/magic"
+  },
+  {
+    "vendor": "openai",
+    "brand": "stripe",
+    "relationship": "partner",
+    "source": "https://stripe.com/newsroom/news/stripe-and-openai"
+  },
+  {
+    "vendor": "openai",
+    "brand": "apple",
+    "relationship": "partner",
+    "source": "https://www.apple.com/newsroom/2024/06/introducing-apple-intelligence-for-iphone-ipad-and-mac/"
+  },
+  {
+    "vendor": "openai",
+    "brand": "siri",
+    "relationship": "technology_provider",
+    "source": "https://www.apple.com/newsroom/2024/06/introducing-apple-intelligence-for-iphone-ipad-and-mac/"
+  },
+  {
+    "vendor": "google",
+    "brand": "google workspace",
+    "relationship": "subsidiary",
+    "source": "https://workspace.google.com/"
+  },
+  {
+    "vendor": "google",
+    "brand": "google docs",
+    "relationship": "subsidiary",
+    "source": "https://workspace.google.com/"
+  },
+  {
+    "vendor": "google",
+    "brand": "google sheets",
+    "relationship": "subsidiary",
+    "source": "https://workspace.google.com/"
+  },
+  {
+    "vendor": "google",
+    "brand": "google cloud",
+    "relationship": "subsidiary",
+    "source": "https://cloud.google.com/"
+  },
+  {
+    "vendor": "google",
+    "brand": "android",
+    "relationship": "subsidiary",
+    "source": "https://www.android.com/"
+  },
+  {
+    "vendor": "google",
+    "brand": "youtube",
+    "relationship": "subsidiary",
+    "source": "https://www.youtube.com/"
+  },
+  {
+    "vendor": "google",
+    "brand": "chrome",
+    "relationship": "subsidiary",
+    "source": "https://www.google.com/chrome/"
+  },
+  {
+    "vendor": "google",
+    "brand": "pixel",
+    "relationship": "subsidiary",
+    "source": "https://store.google.com/category/phones"
+  },
+  {
+    "vendor": "google",
+    "brand": "google maps",
+    "relationship": "subsidiary",
+    "source": "https://maps.google.com/"
+  },
+  {
+    "vendor": "google",
+    "brand": "gmail",
+    "relationship": "subsidiary",
+    "source": "https://mail.google.com/"
+  },
+  {
+    "vendor": "anthropic",
+    "brand": "amazon",
+    "relationship": "investor",
+    "source": "https://www.aboutamazon.com/news/company-news/amazon-anthropic-ai"
+  },
+  {
+    "vendor": "anthropic",
+    "brand": "aws",
+    "relationship": "investor_cloud",
+    "source": "https://www.aboutamazon.com/news/company-news/amazon-anthropic-ai"
+  },
+  {
+    "vendor": "anthropic",
+    "brand": "google cloud",
+    "relationship": "investor",
+    "source": "https://cloud.google.com/blog/products/ai-machine-learning/google-cloud-invests-in-anthropic"
+  },
+  {
+    "vendor": "anthropic",
+    "brand": "notion",
+    "relationship": "partner",
+    "source": "https://www.notion.so/product/ai"
+  },
+  {
+    "vendor": "meta",
+    "brand": "instagram",
+    "relationship": "subsidiary",
+    "source": "https://about.meta.com/"
+  },
+  {
+    "vendor": "meta",
+    "brand": "whatsapp",
+    "relationship": "subsidiary",
+    "source": "https://about.meta.com/"
+  },
+  {
+    "vendor": "meta",
+    "brand": "facebook",
+    "relationship": "subsidiary",
+    "source": "https://about.meta.com/"
+  },
+  {
+    "vendor": "meta",
+    "brand": "meta quest",
+    "relationship": "subsidiary",
+    "source": "https://about.meta.com/"
+  },
+  {
+    "vendor": "baidu",
+    "brand": "baidu cloud",
+    "relationship": "subsidiary",
+    "source": "https://cloud.baidu.com/"
+  },
+  {
+    "vendor": "baidu",
+    "brand": "baidu maps",
+    "relationship": "subsidiary",
+    "source": "https://map.baidu.com/"
+  },
+  {
+    "vendor": "bytedance",
+    "brand": "douyin",
+    "relationship": "subsidiary",
+    "source": "https://www.douyin.com/"
+  },
+  {
+    "vendor": "bytedance",
+    "brand": "tiktok",
+    "relationship": "subsidiary",
+    "source": "https://www.tiktok.com/"
+  },
+  {
+    "vendor": "bytedance",
+    "brand": "volcano engine",
+    "relationship": "subsidiary",
+    "source": "https://www.volcengine.com/"
+  },
+  {
+    "vendor": "deepseek",
+    "brand": "high-flyer",
+    "relationship": "parent_fund",
+    "source": "https://en.wikipedia.org/wiki/DeepSeek"
+  },
+  {
+    "vendor": "openai",
+    "brand": "reddit",
+    "relationship": "data_partner",
+    "source": "https://openai.com/index/openai-and-reddit-partnership/"
+  },
+  {
+    "vendor": "google",
+    "brand": "reddit",
+    "relationship": "data_partner",
+    "source": "https://blog.google/inside-google/company-announcements/expanded-reddit-partnership/"
+  }
+]

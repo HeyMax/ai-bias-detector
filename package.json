@@ -5,9 +5,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run build && vite build --watch",
-    "build": "vite build && npm run copy-assets",
-    "copy-assets": "cp manifest.json dist/ && cp src/popup/popup.html dist/popup/ && cp src/content/content.css dist/content/ && cp -r icons dist/ && cp -r src/_locales dist/",
+    "dev": "npm run build",
+    "build": "rm -rf dist && npm run build:content && npm run build:sw && npm run build:popup && npm run copy-assets",
+    "build:content": "BUILD_ENTRY=content vite build",
+    "build:sw": "BUILD_ENTRY=service-worker vite build",
+    "build:popup": "BUILD_ENTRY=popup vite build",
+    "copy-assets": "cp manifest.json dist/ && mkdir -p dist/popup dist/content && cp src/popup/popup.html dist/popup/ && cp src/content/content.css dist/content/ && cp -r icons dist/ && cp -r src/_locales dist/",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit"
   },

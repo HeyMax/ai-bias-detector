@@ -14,7 +14,8 @@
     "https://gemini.google.com/*",
     "https://www.perplexity.ai/*",
     "https://claude.ai/*",
-    "https://poe.com/*"
+    "https://poe.com/*",
+    "https://raw.githubusercontent.com/HeyMax/ai-bias-detector/*"
   ],
   "action": {
     "default_popup": "popup/popup.html",

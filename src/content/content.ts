@@ -4,10 +4,11 @@
  * bias analysis engine, and renders the floating panel.
  */
 
-import { analyze } from '../engine/analyzer.js';
+import { analyze, setRemoteConflicts } from '../engine/analyzer.js';
 import { createAdapter } from '../platforms/base.js';
 import { setLocale, t } from '../i18n/messages.js';
 import { renderPanel, updatePanel, showBadge, hideBadge } from './ui/panel.js';
+import { getConflictDatabase } from '../engine/conflict-updater.js';
 import type { AnalysisResult, UserSettings } from '../types/index.js';
 import { DEFAULT_SETTINGS } from '../types/index.js';
 
@@ -25,6 +26,15 @@ async function loadSettings(): Promise<void> {
     // storage unavailable in dev; use defaults
   }
   setLocale(settings.locale);
+}
+
+async function loadRemoteConflicts(): Promise<void> {
+  try {
+    const db = await getConflictDatabase();
+    setRemoteConflicts(db);
+  } catch {
+    // built-in DB is the fallback
+  }
 }
 
 function init(): void {
@@ -103,7 +113,10 @@ function debounce<T extends (...args: unknown[]) => void>(
   };
 }
 
-loadSettings().then(init);
+loadSettings().then(() => {
+  loadRemoteConflicts();
+  init();
+});
 
 chrome.storage?.onChanged?.addListener((changes) => {
   if (changes.settings?.newValue) {

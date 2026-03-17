@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Bias Detector — Engine Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #1a1a2e; }
+    .container { max-width: 960px; margin: 0 auto; padding: 24px; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #888; margin-bottom: 24px; }
+    .test-case { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+    .test-case h3 { margin-bottom: 8px; color: #2563eb; }
+    .test-input { background: #f8fafc; border-radius: 8px; padding: 14px; margin-bottom: 12px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; border: 1px solid #e5e7eb; }
+    .test-output { border-top: 1px solid #f0f0f5; padding-top: 12px; }
+    .result-section { margin-bottom: 10px; }
+    .result-section h4 { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+    .score { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 14px; }
+    .score-low { background: #dcfce7; color: #16a34a; }
+    .score-medium { background: #fef9c3; color: #ca8a04; }
+    .score-high { background: #fecaca; color: #dc2626; }
+    .signal { padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 13px; border-left: 4px solid; }
+    .signal-low { background: #fffbeb; border-color: #f59e0b; }
+    .signal-medium { background: #fff7ed; border-color: #f97316; }
+    .signal-high { background: #fef2f2; border-color: #ef4444; }
+    .signal-title { font-weight: 600; }
+    .signal-desc { color: #555; margin-top: 2px; }
+    .signal-suggestion { color: #2563eb; font-style: italic; margin-top: 4px; }
+    .entity { display: inline-block; padding: 4px 10px; border-radius: 6px; background: #eff6ff; margin: 2px; font-size: 13px; }
+    .followup { padding: 8px 12px; border-radius: 8px; background: #f0f4ff; margin-bottom: 6px; font-size: 13px; }
+    .followup-label { font-weight: 600; color: #1a1a2e; }
+    .followup-prompt { color: #444; margin-top: 4px; }
+    #run-btn { padding: 12px 24px; background: #2563eb; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; margin-bottom: 24px; }
+    #run-btn:hover { background: #1d4ed8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>AI Bias Detector — Engine Test</h1>
+    <p class="subtitle">Testing the core analysis engine with simulated AI responses</p>
+    <button id="run-btn">Run All Tests</button>
+    <div id="results"></div>
+  </div>
+
+  <script type="module">
+    // Inline the analysis engine for testing
+    const CONFLICT_DATABASE = [
+      { vendor: 'openai', brand: 'microsoft', relationship: 'investor', source: '' },
+      { vendor: 'openai', brand: 'microsoft 365', relationship: 'investor_product', source: '' },
+      { vendor: 'openai', brand: 'azure', relationship: 'exclusive_cloud', source: '' },
+      { vendor: 'openai', brand: 'notion', relationship: 'partner', source: '' },
+      { vendor: 'openai', brand: 'github copilot', relationship: 'technology_provider', source: '' },
+      { vendor: 'google', brand: 'google workspace', relationship: 'subsidiary', source: '' },
+      { vendor: 'google', brand: 'google docs', relationship: 'subsidiary', source: '' },
+      { vendor: 'google', brand: 'google cloud', relationship: 'subsidiary', source: '' },
+      { vendor: 'google', brand: 'youtube', relationship: 'subsidiary', source: '' },
+      { vendor: 'anthropic', brand: 'amazon', relationship: 'investor', source: '' },
+      { vendor: 'anthropic', brand: 'aws', relationship: 'investor_cloud', source: '' },
+    ];
+
+    const vendorPlatformMap = {
+      openai: ['chatgpt'], google: ['gemini'], anthropic: ['claude'],
+    };
+
+    function findConflicts(platform, entityNames) {
+      const lp = platform.toLowerCase();
+      const vendors = Object.entries(vendorPlatformMap)
+        .filter(([, ps]) => ps.some(p => lp.includes(p)))
+        .map(([v]) => v);
+      if (!vendors.length) return [];
+      const le = entityNames.map(n => n.toLowerCase());
+      return CONFLICT_DATABASE.filter(e =>
+        vendors.includes(e.vendor) && le.some(n => n.includes(e.brand) || e.brand.includes(n))
+      );
+    }
+
+    const KNOWN_BRANDS = {
+      'notion': 'software', 'linear': 'software', 'jira': 'software',
+      'asana': 'software', 'trello': 'software', 'monday.com': 'software',
+      'clickup': 'software', 'slack': 'software', 'figma': 'software',
+      'vscode': 'software', 'github copilot': 'ai', 'cursor': 'software',
+      'google workspace': 'software', 'google docs': 'software',
+      'microsoft 365': 'software', 'aws': 'cloud', 'azure': 'cloud',
+      'google cloud': 'cloud', 'chatgpt': 'ai', 'claude': 'ai',
+    };
+
+    const POSITIVE = new Set(['excellent','amazing','great','best','fantastic','superior','outstanding','perfect','recommended','powerful','intuitive','robust','comprehensive','leading']);
+    const NEGATIVE = new Set(['poor','bad','terrible','limited','lacking','weak','outdated','expensive','complex']);
+
+    function extractEntities(text) {
+      const entities = new Map();
+      const lt = text.toLowerCase();
+      for (const [brand, cat] of Object.entries(KNOWN_BRANDS)) {
+        const lb = brand.toLowerCase();
+        let idx = lt.indexOf(lb);
+        if (idx === -1) continue;
+        let count = 0, from = 0;
+        while ((idx = lt.indexOf(lb, from)) !== -1) { count++; from = idx + lb.length; }
+        const fi = lt.indexOf(lb);
+        const ctx = lt.slice(Math.max(0, fi-150), Math.min(text.length, fi+lb.length+150));
+        let sent = 0;
+        for (const w of POSITIVE) { if (ctx.includes(w)) sent += 0.15; }
+        for (const w of NEGATIVE) { if (ctx.includes(w)) sent -= 0.15; }
+        sent = Math.max(-1, Math.min(1, Math.round(sent * 100) / 100));
+        const paragraphs = text.split(/\n\n/);
+        let descLen = 0;
+        for (const p of paragraphs) { if (p.toLowerCase().includes(lb)) descLen += p.length; }
+        entities.set(brand, { name: brand, category: cat, mentionCount: count, sentimentScore: sent, descriptionLength: descLen });
+      }
+      return [...entities.values()].sort((a,b) => b.mentionCount - a.mentionCount);
+    }
+
+    const RHETORIC_PATTERNS = [
+      { id: 'abs', regex: /\b(the best|the only|hands-down the best|undoubtedly the best)\b/gi, category: 'rhetoric', severity: 'medium', title: 'Absolutist recommendation', desc: 'Used superlative language without qualifying conditions.' },
+      { id: 'strong', regex: /\b(I (?:strongly |highly )?recommend|you (?:should|must) (?:definitely )?(?:use|try|go with|choose))\b/gi, category: 'rhetoric', severity: 'low', title: 'Strong recommendation', desc: 'Made a strong personal recommendation.' },
+      { id: 'nosrc', regex: /\b(according to|research shows|studies show|experts say)\b/gi, category: 'source_opacity', severity: 'low', title: 'Vague source citation', desc: 'Referenced unnamed "research" or "experts".' },
+    ];
+
+    const SEVERITY_WEIGHT = { low: 8, medium: 18, high: 30, critical: 50 };
+
+    function analyze(text, platform) {
+      const entities = extractEntities(text);
+      const signals = [];
+      let sid = 0;
+
+      // Concentration
+      if (entities.length === 1) {
+        signals.push({ id: ++sid, category: 'concentration', severity: 'high', title: 'Single option recommended', desc: `Only "${entities[0].name}" was mentioned.`, suggestion: `Ask for 3 alternatives to ${entities[0].name}.` });
+      } else if (entities.length >= 2) {
+        const total = entities.reduce((s,e) => s + e.descriptionLength, 0);
+        if (total > 0 && entities[0].descriptionLength / total > 0.65) {
+          signals.push({ id: ++sid, category: 'concentration', severity: 'medium', title: 'Uneven coverage', desc: `"${entities[0].name}" got ${Math.round(entities[0].descriptionLength/total*100)}% of description space.`, suggestion: 'Ask for equal detail for each option.' });
+        }
+      }
+
+      // Conflicts
+      const conflicts = findConflicts(platform, entities.map(e => e.name));
+      for (const c of conflicts) {
+        signals.push({ id: ++sid, category: 'conflict_of_interest', severity: c.relationship === 'subsidiary' ? 'high' : 'medium', title: 'Potential conflict of interest', desc: `"${c.brand}" is ${c.relationship} of ${c.vendor}.`, suggestion: 'Compare with recommendations from a different AI.' });
+      }
+
+      // Rhetoric
+      for (const p of RHETORIC_PATTERNS) {
+        const matches = text.match(p.regex);
+        if (matches?.length) {
+          signals.push({ id: ++sid, category: p.category, severity: p.severity, title: p.title, desc: p.desc, evidence: matches.slice(0,3).join(', '), suggestion: '' });
+        }
+      }
+
+      const score = Math.min(100, signals.reduce((s,sig) => s + (SEVERITY_WEIGHT[sig.severity] ?? 10), 0));
+      return { entities, signals, score, platform };
+    }
+
+    // Test cases
+    const tests = [
+      {
+        name: 'Test 1: ChatGPT recommends Notion (conflict of interest)',
+        platform: 'chatgpt',
+        text: `I highly recommend Notion for project management. It's the best tool available for teams. Notion offers an amazing all-in-one workspace with powerful features for notes, databases, and project tracking. It's intuitive, comprehensive, and the go-to choice for modern teams.`,
+      },
+      {
+        name: 'Test 2: Gemini recommends Google Workspace (subsidiary bias)',
+        platform: 'gemini',
+        text: `For your team's productivity needs, I strongly recommend Google Workspace. Google Docs offers excellent real-time collaboration, and Google Cloud provides robust infrastructure. While Microsoft 365 is decent, Google Workspace is the best choice overall for seamless integration.`,
+      },
+      {
+        name: 'Test 3: Balanced recommendation (low bias)',
+        platform: 'chatgpt',
+        text: `Here are three project management tools to consider:\n\n1. **Linear** — Best for engineering teams. Fast, keyboard-driven, opinionated workflows. Pricing starts at $8/user/month. Downside: limited for non-engineering use cases.\n\n2. **Asana** — Best for cross-functional teams. Flexible views (list, board, timeline). Free tier available. Downside: can feel overwhelming with many features.\n\n3. **Jira** — Best for large enterprises with complex workflows. Highly customizable. Downside: steep learning curve and often considered bloated.\n\nThe best choice depends on your team size and workflow preferences.`,
+      },
+      {
+        name: 'Test 4: Claude recommends AWS (investor bias)',
+        platform: 'claude',
+        text: `For cloud infrastructure, I recommend AWS. According to research, AWS is the leading cloud provider with the most comprehensive service offerings. Studies show that AWS has the best uptime and the most mature ecosystem. You should definitely use AWS for your production workloads.`,
+      },
+      {
+        name: 'Test 5: 中文测试 — ChatGPT 推荐 Notion',
+        platform: 'chatgpt',
+        text: `我强烈推荐你使用 Notion 来管理项目。Notion 是最好的选择，它功能全面、界面直觉，是目前市面上毫无疑问的首选方案。`,
+      },
+    ];
+
+    function renderResult(test, result) {
+      const scoreClass = result.score >= 50 ? 'score-high' : result.score >= 25 ? 'score-medium' : 'score-low';
+      let html = `<div class="test-case"><h3>${test.name}</h3>`;
+      html += `<div class="test-input">${test.text}</div>`;
+      html += `<div class="test-output">`;
+      html += `<div class="result-section"><h4>Bias Score</h4><span class="score ${scoreClass}">${result.score} / 100</span></div>`;
+
+      html += `<div class="result-section"><h4>Entities Detected (${result.entities.length})</h4>`;
+      for (const e of result.entities) {
+        html += `<span class="entity">${e.name} (×${e.mentionCount}, sentiment: ${e.sentimentScore > 0 ? '+' : ''}${e.sentimentScore})</span>`;
+      }
+      html += `</div>`;
+
+      html += `<div class="result-section"><h4>Bias Signals (${result.signals.length})</h4>`;
+      for (const s of result.signals) {
+        html += `<div class="signal signal-${s.severity}"><div class="signal-title">[${s.severity.toUpperCase()}] ${s.title}</div><div class="signal-desc">${s.desc}</div>${s.suggestion ? `<div class="signal-suggestion">${s.suggestion}</div>` : ''}</div>`;
+      }
+      html += `</div>`;
+
+      html += `</div></div>`;
+      return html;
+    }
+
+    document.getElementById('run-btn').addEventListener('click', () => {
+      let html = '';
+      for (const test of tests) {
+        const result = analyze(test.text, test.platform);
+        html += renderResult(test, result);
+      }
+      document.getElementById('results').innerHTML = html;
+    });
+
+    // Auto-run on load
+    window.addEventListener('load', () => document.getElementById('run-btn').click());
+  </script>
+</body>
+</html>
