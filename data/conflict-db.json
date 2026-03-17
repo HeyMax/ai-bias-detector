@@ -214,5 +214,131 @@
     "brand": "reddit",
     "relationship": "data_partner",
     "source": "https://blog.google/inside-google/company-announcements/expanded-reddit-partnership/"
+  },
+  {
+    "vendor": "bytedance",
+    "brand": "feishu",
+    "relationship": "subsidiary",
+    "source": "https://www.feishu.cn/"
+  },
+  {
+    "vendor": "bytedance",
+    "brand": "飞书",
+    "relationship": "subsidiary",
+    "source": "https://www.feishu.cn/"
+  },
+  {
+    "vendor": "bytedance",
+    "brand": "剪映",
+    "relationship": "subsidiary",
+    "source": "https://www.capcut.cn/"
+  },
+  {
+    "vendor": "tencent",
+    "brand": "微信",
+    "relationship": "subsidiary",
+    "source": "https://weixin.qq.com/"
+  },
+  {
+    "vendor": "tencent",
+    "brand": "wechat",
+    "relationship": "subsidiary",
+    "source": "https://weixin.qq.com/"
+  },
+  {
+    "vendor": "tencent",
+    "brand": "企业微信",
+    "relationship": "subsidiary",
+    "source": "https://work.weixin.qq.com/"
+  },
+  {
+    "vendor": "tencent",
+    "brand": "腾讯文档",
+    "relationship": "subsidiary",
+    "source": "https://docs.qq.com/"
+  },
+  {
+    "vendor": "tencent",
+    "brand": "腾讯云",
+    "relationship": "subsidiary",
+    "source": "https://cloud.tencent.com/"
+  },
+  {
+    "vendor": "tencent",
+    "brand": "tencent cloud",
+    "relationship": "subsidiary",
+    "source": "https://cloud.tencent.com/"
+  },
+  {
+    "vendor": "tencent",
+    "brand": "腾讯会议",
+    "relationship": "subsidiary",
+    "source": "https://meeting.tencent.com/"
+  },
+  {
+    "vendor": "tencent",
+    "brand": "qq",
+    "relationship": "subsidiary",
+    "source": "https://im.qq.com/"
+  },
+  {
+    "vendor": "alibaba",
+    "brand": "阿里云",
+    "relationship": "subsidiary",
+    "source": "https://www.aliyun.com/"
+  },
+  {
+    "vendor": "alibaba",
+    "brand": "alibaba cloud",
+    "relationship": "subsidiary",
+    "source": "https://www.alibabacloud.com/"
+  },
+  {
+    "vendor": "alibaba",
+    "brand": "钉钉",
+    "relationship": "subsidiary",
+    "source": "https://www.dingtalk.com/"
+  },
+  {
+    "vendor": "alibaba",
+    "brand": "dingtalk",
+    "relationship": "subsidiary",
+    "source": "https://www.dingtalk.com/"
+  },
+  {
+    "vendor": "alibaba",
+    "brand": "淘宝",
+    "relationship": "subsidiary",
+    "source": "https://www.taobao.com/"
+  },
+  {
+    "vendor": "alibaba",
+    "brand": "天猫",
+    "relationship": "subsidiary",
+    "source": "https://www.tmall.com/"
+  },
+  {
+    "vendor": "alibaba",
+    "brand": "支付宝",
+    "relationship": "subsidiary",
+    "source": "https://www.alipay.com/"
+  },
+  {
+    "vendor": "alibaba",
+    "brand": "语雀",
+    "relationship": "subsidiary",
+    "source": "https://www.yuque.com/"
+  },
+  {
+    "vendor": "alibaba",
+    "brand": "1688",
+    "relationship": "subsidiary",
+    "source": "https://www.1688.com/"
+  },
+  {
+    "vendor": "moonshot",
+    "brand": "kimi",
+    "relationship": "subsidiary",
+    "source": "https://www.moonshot.cn/"
   }
 ]

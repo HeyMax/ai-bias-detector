@@ -11,7 +11,9 @@ export type BiasCategory =
   | 'source_opacity';    // no citation or evidence provided
 
 export type UserMode = 'simple' | 'expert';
-export type Platform = 'chatgpt' | 'gemini' | 'perplexity' | 'claude' | 'poe';
+export type Platform =
+  | 'chatgpt' | 'gemini' | 'perplexity' | 'claude' | 'poe'
+  | 'doubao' | 'deepseek' | 'yuanbao' | 'qianwen' | 'kimi';
 export type Locale = 'en' | 'zh';
 
 export interface BiasSignal {
@@ -77,7 +79,7 @@ export interface CustomRule {
 export const DEFAULT_SETTINGS: UserSettings = {
   mode: 'simple',
   locale: 'en',
-  enabledPlatforms: ['chatgpt', 'gemini', 'perplexity', 'claude', 'poe'],
+  enabledPlatforms: ['chatgpt', 'gemini', 'perplexity', 'claude', 'poe', 'doubao', 'deepseek', 'yuanbao', 'qianwen', 'kimi'],
   autoAnalyze: true,
   showFloatingBadge: true,
   customRules: [],

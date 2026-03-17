@@ -96,6 +96,11 @@ Full support for both English and Chinese interfaces and detection patterns.
 | Google Gemini | ✅ Supported 已支持 |
 | Perplexity AI | ✅ Supported 已支持 |
 | Claude (claude.ai) | ✅ Supported 已支持 |
+| 豆包 Doubao (doubao.com) | ✅ Supported 已支持 |
+| DeepSeek (chat.deepseek.com) | ✅ Supported 已支持 |
+| 腾讯元宝 Yuanbao (yuanbao.tencent.com) | ✅ Supported 已支持 |
+| 通义千问 Qianwen (qianwen.com) | ✅ Supported 已支持 |
+| Kimi (kimi.com) | ✅ Supported 已支持 |
 | Poe | 🔜 Coming soon 即将支持 |
 
 ---
@@ -137,9 +142,9 @@ Then load it in Chrome / 然后在 Chrome 中加载:
 ## 🏗️ How It Works / 工作原理
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│  AI Chat Page (ChatGPT / Gemini / Perplexity / Claude)  │
-└───────────────────────┬─────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────┐
+│  AI Chat Page (ChatGPT / Gemini / Claude / 豆包 / DeepSeek / ...)  │
+└───────────────────────┬────────────────────────────────────────────┘
                         │  DOM MutationObserver
                         ▼
 ┌─────────────────────────────────────────────────────────┐
@@ -222,7 +227,7 @@ We'd love your help! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 🗺️ Roadmap / 路线图
 
-- [ ] v0.1 — Core detection engine + ChatGPT/Gemini/Perplexity/Claude support / 核心检测引擎 + 四平台支持
+- [ ] v0.1 — Core detection engine + 9 platforms (ChatGPT, Gemini, Perplexity, Claude, 豆包, DeepSeek, 元宝, 千问, Kimi) / 核心检测引擎 + 9 大平台支持
 - [ ] v0.2 — Chrome Web Store release / Chrome 应用商店上架
 - [ ] v0.3 — Community-contributed conflict database expansion / 社区共建利益冲突数据库
 - [ ] v0.4 — Firefox extension support / Firefox 浏览器支持

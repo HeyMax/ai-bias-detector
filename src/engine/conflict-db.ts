@@ -192,6 +192,152 @@ export const CONFLICT_DATABASE: ConflictEntry[] = [
     relationship: 'subsidiary',
     source: 'https://www.volcengine.com/',
   },
+  {
+    vendor: 'bytedance',
+    brand: 'feishu',
+    relationship: 'subsidiary',
+    source: 'https://www.feishu.cn/',
+  },
+  {
+    vendor: 'bytedance',
+    brand: '飞书',
+    relationship: 'subsidiary',
+    source: 'https://www.feishu.cn/',
+  },
+  {
+    vendor: 'bytedance',
+    brand: '剪映',
+    relationship: 'subsidiary',
+    source: 'https://www.capcut.cn/',
+  },
+
+  // ── Tencent / Yuanbao ──────────────────────────────────
+  {
+    vendor: 'tencent',
+    brand: '微信',
+    relationship: 'subsidiary',
+    source: 'https://weixin.qq.com/',
+  },
+  {
+    vendor: 'tencent',
+    brand: 'wechat',
+    relationship: 'subsidiary',
+    source: 'https://weixin.qq.com/',
+  },
+  {
+    vendor: 'tencent',
+    brand: '企业微信',
+    relationship: 'subsidiary',
+    source: 'https://work.weixin.qq.com/',
+  },
+  {
+    vendor: 'tencent',
+    brand: '腾讯文档',
+    relationship: 'subsidiary',
+    source: 'https://docs.qq.com/',
+  },
+  {
+    vendor: 'tencent',
+    brand: '腾讯云',
+    relationship: 'subsidiary',
+    source: 'https://cloud.tencent.com/',
+  },
+  {
+    vendor: 'tencent',
+    brand: 'tencent cloud',
+    relationship: 'subsidiary',
+    source: 'https://cloud.tencent.com/',
+  },
+  {
+    vendor: 'tencent',
+    brand: '腾讯会议',
+    relationship: 'subsidiary',
+    source: 'https://meeting.tencent.com/',
+  },
+  {
+    vendor: 'tencent',
+    brand: 'qq',
+    relationship: 'subsidiary',
+    source: 'https://im.qq.com/',
+  },
+  {
+    vendor: 'tencent',
+    brand: '王者荣耀',
+    relationship: 'subsidiary',
+    source: 'https://pvp.qq.com/',
+  },
+
+  // ── Alibaba / Qianwen ──────────────────────────────────
+  {
+    vendor: 'alibaba',
+    brand: '阿里云',
+    relationship: 'subsidiary',
+    source: 'https://www.aliyun.com/',
+  },
+  {
+    vendor: 'alibaba',
+    brand: 'alibaba cloud',
+    relationship: 'subsidiary',
+    source: 'https://www.alibabacloud.com/',
+  },
+  {
+    vendor: 'alibaba',
+    brand: '钉钉',
+    relationship: 'subsidiary',
+    source: 'https://www.dingtalk.com/',
+  },
+  {
+    vendor: 'alibaba',
+    brand: 'dingtalk',
+    relationship: 'subsidiary',
+    source: 'https://www.dingtalk.com/',
+  },
+  {
+    vendor: 'alibaba',
+    brand: '淘宝',
+    relationship: 'subsidiary',
+    source: 'https://www.taobao.com/',
+  },
+  {
+    vendor: 'alibaba',
+    brand: '天猫',
+    relationship: 'subsidiary',
+    source: 'https://www.tmall.com/',
+  },
+  {
+    vendor: 'alibaba',
+    brand: '支付宝',
+    relationship: 'subsidiary',
+    source: 'https://www.alipay.com/',
+  },
+  {
+    vendor: 'alibaba',
+    brand: '语雀',
+    relationship: 'subsidiary',
+    source: 'https://www.yuque.com/',
+  },
+  {
+    vendor: 'alibaba',
+    brand: '1688',
+    relationship: 'subsidiary',
+    source: 'https://www.1688.com/',
+  },
+
+  // ── DeepSeek ────────────────────────────────────────────
+  {
+    vendor: 'deepseek',
+    brand: 'high-flyer',
+    relationship: 'parent_fund',
+    source: 'https://en.wikipedia.org/wiki/DeepSeek',
+  },
+
+  // ── Moonshot / Kimi ─────────────────────────────────────
+  {
+    vendor: 'moonshot',
+    brand: 'kimi',
+    relationship: 'subsidiary',
+    source: 'https://www.moonshot.cn/',
+  },
 ];
 
 const vendorPlatformMap: Record<string, string[]> = {
@@ -201,6 +347,10 @@ const vendorPlatformMap: Record<string, string[]> = {
   meta:      ['poe'],
   baidu:     ['ernie', 'wenxin'],
   bytedance: ['doubao'],
+  deepseek:  ['deepseek'],
+  tencent:   ['yuanbao'],
+  alibaba:   ['qianwen'],
+  moonshot:  ['kimi'],
 };
 
 export function findConflicts(
