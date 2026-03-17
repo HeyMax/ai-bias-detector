@@ -1,32 +1,49 @@
 /**
  * Remote conflict database updater.
  *
- * Strategy:
- * 1. The extension ships with a built-in snapshot of the conflict DB
- *    (conflict-db.ts) as offline fallback — always works, even with
- *    no network.
- * 2. On startup and every 24h, it tries to fetch the latest version
- *    from a public GitHub raw URL.  If successful, the fresh data is
- *    cached in chrome.storage.local.
- * 3. The analyzer always merges built-in + remote data, deduplicating
- *    by (vendor, brand) key.
+ * Design principle: the extension must work perfectly with ZERO
+ * network access.  Remote update is a bonus, not a requirement.
  *
- * This means:
- * - Contributors add entries to conflict-db-remote.json via PR
- * - After merge, every user gets the update within 24h — no extension
- *   update needed
- * - If GitHub is unreachable, the built-in data still works
+ * Update strategy:
+ * 1. Built-in DB (conflict-db.ts) — compiled into the extension,
+ *    always available, updated when user installs a new version
+ *    from Chrome Web Store.
+ * 2. Chrome Web Store auto-update — the primary update channel.
+ *    When we release a new version, the built-in DB is refreshed.
+ *    Most users get updates within 24-48h via Chrome's own mechanism.
+ * 3. Remote hot-update (optional, best-effort) — tries multiple
+ *    CDN mirrors to fetch the latest DB between extension releases.
+ *    If ALL mirrors fail, silently falls back to built-in data.
+ *
+ * Remote mirrors (tried in order, first success wins):
+ * - jsDelivr CDN (works in mainland China, backed by Cloudflare)
+ * - GitHub raw (may be slow or blocked in some regions)
+ *
+ * Users don't need a GitHub account. Users don't need any account.
+ * Users don't even need internet — built-in data always works.
  */
 
 import type { ConflictEntry } from '../types/index.js';
 import { CONFLICT_DATABASE } from './conflict-db.js';
 
-const REMOTE_URL =
-  'https://raw.githubusercontent.com/HeyMax/ai-bias-detector/main/data/conflict-db.json';
+/**
+ * Multiple mirror URLs, tried in order.
+ * jsDelivr is a global CDN with China PoPs, so it's listed first.
+ */
+const REMOTE_MIRRORS = [
+  'https://cdn.jsdelivr.net/gh/HeyMax/ai-bias-detector@main/data/conflict-db.json',
+  'https://raw.githubusercontent.com/HeyMax/ai-bias-detector/main/data/conflict-db.json',
+];
 
 const CACHE_KEY = 'conflict_db_remote';
 const CACHE_TS_KEY = 'conflict_db_remote_ts';
 const UPDATE_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+const ALLOWED_RELATIONSHIPS = new Set([
+  'investor', 'investor_product', 'investor_cloud', 'exclusive_cloud',
+  'partner', 'integration', 'subsidiary', 'technology_provider',
+  'parent_fund', 'data_partner', 'acquirer',
+]);
 
 export async function getConflictDatabase(): Promise<ConflictEntry[]> {
   const remote = await getCachedOrFetch();
@@ -43,35 +60,39 @@ async function getCachedOrFetch(): Promise<ConflictEntry[]> {
       return cached;
     }
 
-    // Fetch fresh data in background — don't block the UI
-    fetchAndCache().catch(() => {});
-
-    // Return whatever we have cached right now
+    fetchFromMirrors().catch(() => {});
     return cached;
   } catch {
     return [];
   }
 }
 
-async function fetchAndCache(): Promise<void> {
-  const response = await fetch(REMOTE_URL, {
-    cache: 'no-cache',
-    signal: AbortSignal.timeout(10_000),
-  });
+/**
+ * Try each mirror in order. First successful + valid response wins.
+ */
+async function fetchFromMirrors(): Promise<void> {
+  for (const url of REMOTE_MIRRORS) {
+    try {
+      const response = await fetch(url, {
+        cache: 'no-cache',
+        signal: AbortSignal.timeout(8_000),
+      });
 
-  if (!response.ok) return;
+      if (!response.ok) continue;
 
-  const data: ConflictEntry[] = await response.json();
+      const data: ConflictEntry[] = await response.json();
+      if (validateAndCache(data)) return; // success — stop trying
+    } catch {
+      continue; // try next mirror
+    }
+  }
+  // All mirrors failed — that's fine, built-in DB is the fallback
+}
 
-  if (!Array.isArray(data) || data.length === 0) return;
+function validateAndCache(data: unknown): boolean {
+  if (!Array.isArray(data) || data.length === 0) return false;
 
-  const ALLOWED_RELATIONSHIPS = new Set([
-    'investor', 'investor_product', 'investor_cloud', 'exclusive_cloud',
-    'partner', 'integration', 'subsidiary', 'technology_provider',
-    'parent_fund', 'data_partner', 'acquirer',
-  ]);
-
-  const valid = data.filter(e => {
+  const valid = (data as ConflictEntry[]).filter(e => {
     if (typeof e.vendor !== 'string' || e.vendor !== e.vendor.toLowerCase()) return false;
     if (typeof e.brand !== 'string' || e.brand !== e.brand.toLowerCase()) return false;
     if (typeof e.relationship !== 'string' || !ALLOWED_RELATIONSHIPS.has(e.relationship)) return false;
@@ -79,14 +100,15 @@ async function fetchAndCache(): Promise<void> {
     return true;
   });
 
-  // Safety: if validation strips out > 50% of entries, something is
-  // very wrong (schema change? tampered file?) — don't cache.
-  if (valid.length < data.length * 0.5) return;
+  // Anomaly detection: if >50% entries fail, data is probably corrupt
+  if (valid.length < data.length * 0.5) return false;
 
-  await chrome.storage.local.set({
+  chrome.storage.local.set({
     [CACHE_KEY]: valid,
     [CACHE_TS_KEY]: Date.now(),
   });
+
+  return true;
 }
 
 function mergeAndDedupe(
@@ -96,7 +118,6 @@ function mergeAndDedupe(
   const seen = new Set<string>();
   const result: ConflictEntry[] = [];
 
-  // Remote entries take priority (may have newer relationship types)
   for (const entry of [...remote, ...builtin]) {
     const key = `${entry.vendor}::${entry.brand}`.toLowerCase();
     if (seen.has(key)) continue;
@@ -107,13 +128,9 @@ function mergeAndDedupe(
   return result;
 }
 
-/**
- * Force an immediate refresh — called from settings panel or
- * when user clicks "Check for updates".
- */
 export async function forceRefresh(): Promise<{ count: number; success: boolean }> {
   try {
-    await fetchAndCache();
+    await fetchFromMirrors();
     const stored = await chrome.storage.local.get(CACHE_KEY);
     const remote: ConflictEntry[] = stored[CACHE_KEY] ?? [];
     const merged = mergeAndDedupe(CONFLICT_DATABASE, remote);

@@ -15,7 +15,8 @@
     "https://www.perplexity.ai/*",
     "https://claude.ai/*",
     "https://poe.com/*",
-    "https://raw.githubusercontent.com/HeyMax/ai-bias-detector/*"
+    "https://raw.githubusercontent.com/HeyMax/ai-bias-detector/*",
+    "https://cdn.jsdelivr.net/gh/HeyMax/ai-bias-detector@main/*"
   ],
   "action": {
     "default_popup": "popup/popup.html",
