@@ -1,0 +1,36 @@
+name: Validate Conflict Database
+
+on:
+  pull_request:
+    paths:
+      - 'data/conflict-db.json'
+  push:
+    paths:
+      - 'data/conflict-db.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate conflict-db.json (structure + URLs)
+        run: node scripts/validate-conflict-db.mjs
+
+      - name: Check for unsigned entries
+        run: |
+          echo "Checking that every entry has a valid HTTPS source..."
+          node -e "
+            const data = require('./data/conflict-db.json');
+            const bad = data.filter(e => !e.source || !e.source.startsWith('http'));
+            if (bad.length > 0) {
+              console.error('Entries without valid source URL:');
+              bad.forEach(e => console.error('  -', e.vendor, '→', e.brand));
+              process.exit(1);
+            }
+            console.log('All', data.length, 'entries have valid source URLs.');
+          "

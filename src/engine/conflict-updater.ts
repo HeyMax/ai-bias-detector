@@ -65,12 +65,23 @@ async function fetchAndCache(): Promise<void> {
 
   if (!Array.isArray(data) || data.length === 0) return;
 
-  // Basic validation: each entry must have vendor, brand, relationship
-  const valid = data.filter(
-    e => typeof e.vendor === 'string' &&
-         typeof e.brand === 'string' &&
-         typeof e.relationship === 'string',
-  );
+  const ALLOWED_RELATIONSHIPS = new Set([
+    'investor', 'investor_product', 'investor_cloud', 'exclusive_cloud',
+    'partner', 'integration', 'subsidiary', 'technology_provider',
+    'parent_fund', 'data_partner', 'acquirer',
+  ]);
+
+  const valid = data.filter(e => {
+    if (typeof e.vendor !== 'string' || e.vendor !== e.vendor.toLowerCase()) return false;
+    if (typeof e.brand !== 'string' || e.brand !== e.brand.toLowerCase()) return false;
+    if (typeof e.relationship !== 'string' || !ALLOWED_RELATIONSHIPS.has(e.relationship)) return false;
+    if (typeof e.source !== 'string' || !e.source.startsWith('http')) return false;
+    return true;
+  });
+
+  // Safety: if validation strips out > 50% of entries, something is
+  // very wrong (schema change? tampered file?) — don't cache.
+  if (valid.length < data.length * 0.5) return;
 
   await chrome.storage.local.set({
     [CACHE_KEY]: valid,
