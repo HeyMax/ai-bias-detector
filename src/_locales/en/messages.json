@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "AI Bias Detector",
+    "description": "Extension name"
+  },
+  "appDesc": {
+    "message": "Detect bias in AI recommendations. Don't trust AI blindly — get a second opinion.",
+    "description": "Extension description"
+  }
+}

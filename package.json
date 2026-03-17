@@ -1,0 +1,21 @@
+{
+  "name": "ai-bias-detector",
+  "version": "0.1.0",
+  "description": "Chrome extension to detect bias in AI recommendations",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build && vite build --watch",
+    "build": "vite build && npm run copy-assets",
+    "copy-assets": "cp manifest.json dist/ && cp src/popup/popup.html dist/popup/ && cp src/content/content.css dist/content/ && cp -r icons dist/ && cp -r src/_locales dist/",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chrome": "latest",
+    "typescript": "latest",
+    "vite": "latest",
+    "vite-plugin-web-extension": "latest",
+    "eslint": "latest"
+  }
+}

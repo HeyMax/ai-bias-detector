@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 320px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff; color: #1a1a2e; padding: 20px;
+    }
+    .header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .header__icon { font-size: 28px; }
+    .header__text h1 { font-size: 16px; font-weight: 700; }
+    .header__text p { font-size: 12px; color: #888; }
+
+    .section { margin-bottom: 16px; }
+    .section__title { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+
+    .mode-switch { display: flex; gap: 6px; }
+    .mode-btn {
+      flex: 1; padding: 10px 8px; border-radius: 10px; border: 2px solid #e5e7eb;
+      background: #fff; cursor: pointer; text-align: center; transition: all .15s;
+    }
+    .mode-btn:hover { border-color: #2563eb; }
+    .mode-btn--active { border-color: #2563eb; background: #eff6ff; }
+    .mode-btn__label { font-size: 13px; font-weight: 600; display: block; }
+    .mode-btn__desc { font-size: 11px; color: #888; display: block; margin-top: 2px; }
+
+    .lang-switch { display: flex; gap: 6px; }
+    .lang-btn {
+      flex: 1; padding: 8px; border-radius: 8px; border: 2px solid #e5e7eb;
+      background: #fff; cursor: pointer; font-size: 13px; text-align: center; transition: all .15s;
+    }
+    .lang-btn:hover { border-color: #2563eb; }
+    .lang-btn--active { border-color: #2563eb; background: #eff6ff; }
+
+    .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
+    .toggle-row__label { font-size: 13px; }
+    .toggle {
+      width: 42px; height: 24px; border-radius: 12px; background: #e5e7eb;
+      position: relative; cursor: pointer; transition: background .2s;
+    }
+    .toggle--on { background: #2563eb; }
+    .toggle__knob {
+      width: 20px; height: 20px; border-radius: 50%; background: #fff;
+      position: absolute; top: 2px; left: 2px; transition: transform .2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    }
+    .toggle--on .toggle__knob { transform: translateX(18px); }
+
+    .stats { display: flex; gap: 8px; }
+    .stat {
+      flex: 1; padding: 12px 8px; border-radius: 10px; background: #f8fafc;
+      text-align: center;
+    }
+    .stat__value { font-size: 20px; font-weight: 700; color: #1a1a2e; }
+    .stat__label { font-size: 11px; color: #888; margin-top: 2px; }
+
+    .footer { text-align: center; padding-top: 12px; border-top: 1px solid #f0f0f5; }
+    .footer a { font-size: 12px; color: #2563eb; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header__icon">🔍</div>
+    <div class="header__text">
+      <h1 id="title">AI Bias Detector</h1>
+      <p id="subtitle">Don't trust AI blindly</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section__title" id="mode-title">Mode</div>
+    <div class="mode-switch">
+      <button class="mode-btn mode-btn--active" data-mode="simple">
+        <span class="mode-btn__label" id="simple-label">Simple</span>
+        <span class="mode-btn__desc" id="simple-desc">For everyone</span>
+      </button>
+      <button class="mode-btn" data-mode="expert">
+        <span class="mode-btn__label" id="expert-label">Expert</span>
+        <span class="mode-btn__desc" id="expert-desc">Full details</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section__title" id="lang-title">Language</div>
+    <div class="lang-switch">
+      <button class="lang-btn lang-btn--active" data-lang="en">English</button>
+      <button class="lang-btn" data-lang="zh">中文</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="toggle-row">
+      <span class="toggle-row__label" id="auto-label">Auto-analyze</span>
+      <div class="toggle toggle--on" id="auto-toggle">
+        <div class="toggle__knob"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section__title" id="stats-title">Statistics</div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat__value" id="stat-total">0</div>
+        <div class="stat__label" id="stat-total-label">Analyses</div>
+      </div>
+      <div class="stat">
+        <div class="stat__value" id="stat-signals">0</div>
+        <div class="stat__label" id="stat-signals-label">Signals found</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="https://github.com/chenzhaohao/ai-bias-detector" target="_blank">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/chenzhaohao/ai-bias-detector/issues" target="_blank" id="feedback-link">Feedback</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+/* Minimal host-level reset — actual styles live inside shadow DOM */
+#ai-bias-detector-host {
+  all: initial;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+}
+
+#ai-bias-detector-host * {
+  pointer-events: auto;
+}
